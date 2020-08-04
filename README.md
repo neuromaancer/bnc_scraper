@@ -1,2 +1,19 @@
-# BNC_scraper
-This is a Birtsh National Corpus scraper
+# BNC Scraper
+
+This is a British National Corpus scraper
+
+## TODO
+
+- [x] downloader
+- [ ] reader
+  - [x] read by file
+  - [ ] read all files
+  - [ ] search information
+    - [ ] paragraph
+    - [ ] conversational type
+    - [ ] keywords
+    - [x] title
+    - [ ] person infos
+- [ ] group by
+- [ ] printer
+- [ ] export
