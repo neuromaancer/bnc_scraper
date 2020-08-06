@@ -7,7 +7,7 @@ This is a British National Corpus scraper
 - [x] downloader
 - [ ] reader
   - [x] read by file
-  - [ ] read all files
+  - [x] read all files
   - [ ] search information
     - [ ] paragraph
     - [ ] conversational type
