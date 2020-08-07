@@ -1,7 +1,7 @@
 import time
 
 
-def exe_time(func):
+def exetime(func):
     def new_func(*args, **args2):
         t0 = time.time()
         print(

@@ -1,7 +1,7 @@
 import enum
 from os import cpu_count
 from lxml import etree
-from utils import exe_time
+from utils import exetime
 from configparser import ConfigParser, ExtendedInterpolation
 import os
 from pprint import pprint
@@ -27,13 +27,13 @@ class QType(Enum):
     OTHER = ""
 
 
-# @exe_time
+# @exetime
 def read(where):
     return etree.parse(where)
 
 
-# def get_id(node):
-#     return node.attrib.get(namespace + "id")
+def get_id(node):
+    return node.attrib.get(namespace + "id")
 
 
 def get_all_xml(corpus):
@@ -47,16 +47,15 @@ def get_all_xml(corpus):
 
 
 def _get_written_or_spoken_corpus_filenames(signature, xmlfiles):
-
     return [filename for filename in xmlfiles if signature in open(filename).read()]
 
 
-@exe_time
+@exetime
 def get_written_corpus(xmlfiles):
     return _get_written_or_spoken_corpus_filenames("<wtext", xmlfiles)
 
 
-@exe_time
+@exetime
 def get_spoken_corpus(xmlfiles):
     return _get_written_or_spoken_corpus_filenames("<stext", xmlfiles)
 
@@ -64,6 +63,24 @@ def get_spoken_corpus(xmlfiles):
 # get information
 def get_title(tree):
     return tree.xpath("teiHeader/fileDesc/titleStmt/title")[0].text
+
+
+def remove_ns(str_):
+    return str_.replace(namespace, "")
+
+
+def _pretty(d):
+    for key, value in d.items():
+        print(f"{remove_ns(key)}: {value}")
+
+
+def print_persons(tree):
+    persons = tree.xpath("teiHeader/profileDesc/particDesc/person")
+    for person in persons:
+        print("+" * 20)
+        _pretty(person.attrib)
+        for item in person:
+            print(f"{item.tag}: {item.text}")
 
 
 def get_words(xmlelement):
@@ -139,16 +156,20 @@ if __name__ == "__main__":
     tree = read(where)
     xmlfiles = get_all_xml(corpus)
     utterances, len_sentences = get_utterances(tree)
-    print("_______________", len_sentences)
-    questions = get_questions(utterances)
+    # print("_______________", len_sentences)
+    # questions = get_questions(utterances)
     # print(questions)
     # pprint(get_utterances_by_pairs(questions, utterances))
     #
     # print(context)
-    why = QType.WHY
-    questions = get_questions_by_type(questions, why)
-    print(type(questions))
-    print(questions)
-    num_ques = questions[0][1]
-    context = get_context(num_ques, len_sentences, utterances)
-    print(context)
+
+    # why = QType.WHY
+    # questions = get_questions_by_type(questions, why)
+    # print(type(questions))
+    # print(questions)
+    # num_ques = questions[0][1]
+    # context = get_context(num_ques, len_sentences, utterances)
+    # print(context)
+
+    #######
+    print_persons(tree)
