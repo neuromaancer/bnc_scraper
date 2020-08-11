@@ -13,7 +13,7 @@ This is a British National Corpus scraper
     - [ ] conversational type
     - [ ] keywords
     - [x] title
-    - [ ] person infos
+    - [x] person infos
 - [ ] group by
 - [ ] printer
 - [ ] export

@@ -26,7 +26,6 @@ class QType(Enum):
     HOW = "how"
     OTHER = ""
 
-
 # @exetime
 def read(where):
     return etree.parse(where)
@@ -38,12 +37,16 @@ def get_id(node):
 
 def get_all_xml(corpus):
     xmlfiles = []
-    for root, dirs, filenames in os.walk(corpus):
-        for filename in filenames:
-            basename, extension = os.path.splitext(filename)
-            if extension == ".xml":
-                xmlfiles.append(os.path.join(root, filename))
-    return xmlfiles
+    try:
+        check(corpus)
+        for root, dirs, filenames in os.walk(corpus):
+            for filename in filenames:
+                basename, extension = os.path.splitext(filename)
+                if extension == ".xml":
+                    xmlfiles.append(os.path.join(root, filename))
+        return xmlfiles
+    except FileNotFoundError:
+        pass
 
 
 def _get_written_or_spoken_corpus_filenames(signature, xmlfiles):
@@ -74,6 +77,7 @@ def _pretty(d):
         print(f"{remove_ns(key)}: {value}")
 
 
+# stext
 def print_persons(tree):
     persons = tree.xpath("teiHeader/profileDesc/particDesc/person")
     for person in persons:
@@ -91,6 +95,7 @@ def get_words(xmlelement):
     return words
 
 
+# stext
 def get_utterances(tree):
     u_elems = tree.xpath("stext/u")
     utterances = []
@@ -108,6 +113,7 @@ def get_utterances(tree):
     return utterances, len_sentences
 
 
+# stext
 def get_questions(utterances):
     q_pairs = []
     for idx, u in enumerate(utterances):
@@ -117,6 +123,7 @@ def get_questions(utterances):
     return q_pairs
 
 
+# stext
 def get_utterances_by_pairs(pairs, utterances):
     utters = []
     for idx, u in enumerate(utterances):
@@ -127,6 +134,7 @@ def get_utterances_by_pairs(pairs, utterances):
     return utters
 
 
+# stext
 def get_context(n, len_sentences, utterances, limit=5):
     r = n + limit if n + limit < len_sentences else len_sentences
     l = n - limit if n - limit > 0 else 0
@@ -134,6 +142,7 @@ def get_context(n, len_sentences, utterances, limit=5):
     return sentences
 
 
+# stext
 def get_questions_by_type(questions, q_type):
     q_type_questions = []
     for idx, n, s in questions:
@@ -142,6 +151,7 @@ def get_questions_by_type(questions, q_type):
     return q_type_questions
 
 
+# stext
 def get_sentences(nums, utterances):
     sentences = []
     for u in utterances:
