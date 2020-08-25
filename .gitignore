@@ -133,4 +133,3 @@ dmypy.json
 .DS_Store
 **.xml
 data
-setup.py
