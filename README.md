@@ -1,6 +1,8 @@
 # BNC Scraper
 
-This is a British National Corpus scraper
+This is a British National Corpus scraper. [Unfinished]
+
+**Install:** pip install bnc-scraper
 
 ## TODO
 
@@ -15,5 +17,6 @@ This is a British National Corpus scraper
     - [x] title
     - [x] person infos
 - [ ] group by
-- [ ] printer
+- [x] printer
 - [ ] export
+
