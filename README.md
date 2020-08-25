@@ -1,8 +1,10 @@
 # BNC Scraper
 
-This is a British National Corpus scraper. [Unfinished]
+This is a British National Corpus scraper. **[Unfinished]**
 
-**Install:** pip install bnc-scraper
+**Please feel free to demand your needs.**
+
+**Install:** ```pip install bnc-scraper```
 
 ## TODO
 

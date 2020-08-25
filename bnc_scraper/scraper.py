@@ -1,4 +1,3 @@
-import enum
 from os import cpu_count
 from lxml import etree
 from utils import exetime
