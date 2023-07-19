@@ -31,7 +31,7 @@ def read(where):
 
 
 def get_id(node):
-    return node.attrib.get(namespace + "id")
+    return node.attrib.get(f"{namespace}id")
 
 
 def get_all_xml(corpus):
@@ -87,11 +87,11 @@ def print_persons(tree):
 
 
 def get_words(xmlelement):
-    words = []
-    for word_tag in xmlelement.itertext():
-        if word_tag.strip().lower() is not "":
-            words.append(word_tag.strip())
-    return words
+    return [
+        word_tag.strip()
+        for word_tag in xmlelement.itertext()
+        if word_tag.strip().lower() is not ""
+    ]
 
 
 # stext
@@ -104,9 +104,8 @@ def get_utterances(tree):
         u_l = {}
         for s in u.xpath("s"):
             n = int(s.attrib["n"])
-            if len_sentences < n:
-                len_sentences = n
-            u_l.update({n: get_words(s)})
+            len_sentences = max(len_sentences, n)
+            u_l[n] = get_words(s)
         u = namedtuple("u", ["who", "u_l"])
         utterances.append(u(who, u_l))
     return utterances, len_sentences
@@ -116,9 +115,7 @@ def get_utterances(tree):
 def get_questions(utterances):
     q_pairs = []
     for idx, u in enumerate(utterances):
-        for n, s in u.u_l.items():
-            if "?" in s:
-                q_pairs.append((idx, n, s))
+        q_pairs.extend((idx, n, s) for n, s in u.u_l.items() if "?" in s)
     return q_pairs
 
 
@@ -135,28 +132,21 @@ def get_utterances_by_pairs(pairs, utterances):
 
 # stext
 def get_context(n, len_sentences, utterances, limit=5):
-    r = n + limit if n + limit < len_sentences else len_sentences
-    l = n - limit if n - limit > 0 else 0
-    sentences = get_sentences(list(range(l, r + 1)), utterances)
-    return sentences
+    r = min(n + limit, len_sentences)
+    l = max(n - limit, 0)
+    return get_sentences(list(range(l, r + 1)), utterances)
 
 
 # stext
 def get_questions_by_type(questions, q_type):
-    q_type_questions = []
-    for idx, n, s in questions:
-        if q_type in s:
-            q_type_questions.append((idx, n, s))
-    return q_type_questions
+    return [(idx, n, s) for idx, n, s in questions if q_type in s]
 
 
 # stext
 def get_sentences(nums, utterances):
     sentences = []
     for u in utterances:
-        for n, s in u.u_l.items():
-            if n in nums:
-                sentences.append((n, s))
+        sentences.extend((n, s) for n, s in u.u_l.items() if n in nums)
     return sentences
 
 
