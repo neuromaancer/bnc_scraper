@@ -1,9 +1,7 @@
-from os import cpu_count
 from lxml import etree
 from utils import exetime
 from configparser import ConfigParser, ExtendedInterpolation
 import os
-from pprint import pprint
 from collections import namedtuple
 from enum import Enum
 import operator
@@ -24,6 +22,7 @@ class QType(Enum):
     WHICH = "which"
     HOW = "how"
     OTHER = ""
+
 
 # @exetime
 def read(where):

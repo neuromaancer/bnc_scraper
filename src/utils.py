@@ -13,4 +13,3 @@ def exetime(func):
         return back
 
     return new_func
-

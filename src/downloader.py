@@ -44,14 +44,36 @@ class Downloader:
             f"Download completed in {end_time - start_time:.2f} seconds. File size: {file_size:.2f} MB"
         )
 
-    def unzip(self):
+    def unzip_recursive(self, zip_path, extract_to):
+        """Recursive unzip function."""
         try:
-            rprint(f"Unzipping {self.bnc}")
-            with zipfile.ZipFile(str(self.bnc), "r") as bnc_zip:
-                bnc_zip.extractall(path=str(self.download_to))
-                rprint("Unzip successful!")
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall(extract_to)
+                rprint(f"Extracted {zip_path} to {extract_to}")
+
+            # Check for nested zip files
+            for root, dirs, files in os.walk(extract_to):
+                for file in files:
+                    if file.endswith(".zip"):
+                        file_path = os.path.join(root, file)
+                        # Create a new folder for the nested zip based on its name (without the .zip extension)
+                        nested_extract_to = os.path.join(
+                            extract_to, os.path.splitext(file)[0]
+                        )
+                        os.makedirs(nested_extract_to, exist_ok=True)
+                        # Recursively unzip
+                        self.unzip_recursive(file_path, nested_extract_to)
+                        # Optionally, remove the zip file after extraction
+                        os.remove(file_path)
+
         except zipfile.BadZipFile:
-            rprint("This is not a zip file")
+            rprint(f"{zip_path} is not a zip file")
+
+    def unzip(self):
+        """Unzips the main zip file and any nested zip files."""
+        rprint(f"Unzipping {self.bnc}")
+        self.unzip_recursive(str(self.bnc), str(self.download_to))
+        rprint("Unzip successful!")
 
     def download_with_unzip(self):
         self.download()
